@@ -12,6 +12,88 @@ datasource db {
 
 
 model User {
-  id Int  @id @default(autoincrement())
+  id String @id @default(uuid())
   user_id String @unique
+  store store?
+  order Order[]
+  userpayment Userpayment[]
+}
+
+model store{
+  id String @id @default(uuid())
+  slug String @unique
+  name String 
+  desc String?
+  owner User @relation(fields: [owner_id], references: [user_id])
+  owner_id String @unique
+  phone String?
+  address String?
+  logo String?
+  wallpaper String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime?
+
+}
+
+model Category {
+  id String @id @default(uuid())
+  slug String @unique
+  name String 
+  desc String?
+
+  products Product[]
+  
+  created_at DateTime @default(now())
+  updated_at DateTime?
+}
+
+model Product{
+  id String @id @default(uuid())
+  slug String @unique
+  name String
+  desc String?
+  price Decimal?
+  productImg ProductImages[]
+  cart Cart[]
+  
+  category Category @relation(fields: [category_id], references: [id])
+  category_id String
+
+  creted_at DateTime @default(now())
+  updated_at DateTime?
+}
+
+model ProductImages {
+  id String @id @default(uuid())
+  product Product @relation(fields: [productId], references: [id])
+  productId String
+  isThumbnail Boolean @default(false)
+
+  created_at DateTime @default(now())
+}
+
+model Cart{
+  id String @id @default(uuid())
+  product Product @relation(fields: [product_id], references: [id])
+  product_id String
+  quantity Int
+  created_at DateTime @default(now())
+}
+
+model Order{
+  id String @id @default(uuid())
+  user User @relation(fields: [ouser_id], references: [user_id])
+  ouser_id String
+}
+
+model Userpayment{
+  id String @id @default(uuid())
+  user User @relation(fields: [userId], references: [user_id])
+  userId String
+  paymentType String @default("redit-card")
+  amoung Int
+  transferId String?
+  
+  paymentDate DateTime @default(now())
 }

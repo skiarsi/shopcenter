@@ -6,7 +6,9 @@ import { addauthuser } from './lib/Authusercheck';
 export default async function Home() {
 
   const user = await currentUser();
-
+  
+  // check if user is online
+  // add it on user table if not exist
   user && addauthuser(user.id);
 
   return (
